@@ -5,60 +5,10 @@
       <div class="signin-signup">
         <!-- 登录 -->
         <LoginForm :loginUser="loginUser" :rules="rules" />
-        <!-- 注册 -->
-        <el-form
-          ref="registerForm"
-          :model="registerUser"
-          :rules="registerRules"
-          label-width="100px"
-          class="registerForm sign-up-form"
-        >
-          <el-form-item label="用户名" prop="name">
-            <el-input
-              v-model="registerUser.name"
-              placeholder="Enter UserName..."
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input
-              v-model="registerUser.email"
-              placeholder="Enter Email..."
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input
-              v-model="registerUser.password"
-              type="password"
-              placeholder="Enter password..."
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="确认密码" prop="password2">
-            <el-input
-              v-model="registerUser.password2"
-              type="password"
-              placeholder="Enter password2..."
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="选择身份">
-            <el-select v-model="registerUser.role" placeholder="请选择身份">
-              <el-option label="管理员" value="admin"></el-option>
-              <el-option label="用户" value="user"></el-option>
-              <el-option label="游客" value="visitor"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              @click="handleRegister()"
-              type="primary"
-              class="submit-btn submit_btn"
-              >注册</el-button
-            >
-          </el-form-item>
-          <!-- 找回密码 -->
-          <div class="tiparea">
-            <p>忘记密码? <a href="">立即找回</a></p>
-          </div>
-        </el-form>
+        <RegisterForm
+          :registerUser="registerUser"
+          :registerRules="registerRules"
+        />
       </div>
     </div>
     <!-- 左右切换动画 -->
@@ -90,107 +40,24 @@
 <script lang="ts">
 import { ref, getCurrentInstance, nextTick } from "vue";
 import { loginUser, rules } from "@/utils/loginValidators";
+import { registerUser, registerRules } from "@/utils/registerValidators";
 import LoginForm from "@/components/LoginForm.vue";
+import RegisterForm from "@/components/registerForm.vue";
 export default {
   name: "Logi nRegister",
   components: {
     LoginForm,
+    RegisterForm,
   },
   setup() {
-    // @ts-ignore 忽略类型匹配
-    const { ctx } = getCurrentInstance(); // 获取实例
+    
     const signUpMode = ref<boolean>(false);
-    const registerForm = ref(null); /// 执行完后.value获取到实例
-
     // watchEffect(() => console.log(signUpMode.value))
-    const registerUser = ref({
-      name: "",
-      email: "",
-      password: "",
-      password2: "",
-      role: "",
-    });
-
-    const validatePass2 = (rule: any, value: any, callback: any) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== registerUser.value.password) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
-    const registerRules = ref({
-      name: [
-        {
-          message: "用户名不能为空...",
-          required: true,
-          trigger: "blur",
-        },
-        {
-          min: 2,
-          max: 30,
-          message: "长度在2到30个字符",
-          trigger: "blur",
-        },
-      ],
-      email: [
-        {
-          type: "email",
-          message: "email is incorrect",
-          required: true,
-          trigger: "blur",
-        },
-      ],
-      password: [
-        {
-          message: "password could not be empty",
-          required: true,
-          trigger: "blur",
-        },
-        {
-          min: 6,
-          max: 30,
-          message: "password length has to be 6 to 30 characters",
-          trigger: "blur",
-        },
-      ],
-      password2: [
-        {
-          message: "password2 could not be empty",
-          required: true,
-          trigger: "blur",
-        },
-        {
-          min: 6,
-          max: 30,
-          message: "password2 length has to be 6 to 30 characters",
-          trigger: "blur",
-        },
-        {
-          validator: validatePass2,
-          trigger: 'blur'
-        },
-      ],
-    });
-    // 触发登录方法
-    const handleRegister = () => {
-      (registerForm as any).value.validate((valid: boolean) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    };
     return {
-      registerForm,
       signUpMode,
       loginUser,
       rules,
       registerUser,
-      handleRegister,
       registerRules,
     };
   },
