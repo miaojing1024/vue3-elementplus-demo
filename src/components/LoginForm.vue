@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import { ref, getCurrentInstance } from "vue";
+import { useRouter } from "vue-router";
 export default {
   props: {
     loginUser: {
@@ -49,14 +50,25 @@ export default {
     },
   },
   components: {},
-  setup() {
+  setup(props: any) {
     // @ts-ignore 忽略类型匹配
-    const { ctx } = getCurrentInstance();
+    const { ctx, proxy } = getCurrentInstance();
+    const router = useRouter();
     // 触发登录方法
     const handleLogin = (formName: string) => {
       ctx.$refs[formName].validate((valid: boolean) => {
         if (valid) {
-          alert("submit!");
+          proxy.$axios
+            .post("/api/v1/auth/login", props.loginUser)
+            .then((res: any) => {
+              // 登录成功,存储token到ls
+              const { token } = res.data;
+              localStorage.setItem("msToken", token);
+              proxy.$message({
+                message: "登录成功",
+              });
+              router.push("/");
+            });
         } else {
           console.log("error submit!!");
           return false;
