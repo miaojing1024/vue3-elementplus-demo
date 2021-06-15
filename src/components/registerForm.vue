@@ -56,8 +56,9 @@
 </template>
 
 <script lang="ts">
+import _axios from '@/plugins/axios'
 import { ref, getCurrentInstance, nextTick } from "vue";
-
+import { useRouter } from "vue-router";
 export default {
   props: {
     registerUser: {
@@ -73,15 +74,19 @@ export default {
   setup(props: any) {
     // @ts-ignore 忽略类型匹配
     const { ctx } = getCurrentInstance(); // 获取实例
-    console.log(ctx);
+    console.log(props);
     const registerForm = ref(null); /// 执行完后.value获取到实例
-
+    const router = useRouter();
+    console.log(ctx);
+    console.log(_axios);
     // 触发注册方法
     const handleRegister = () => {
       (registerForm as any).value.validate((valid: boolean) => {
         if (valid) {
-          alert("submit!");
-          ctx.$axios
+          // alert("submit!");
+          console.log(111111);
+
+          _axios
             .post(
               "http://imissu.herokuapp.com/api/v1/auth/register",
               props.registerUser
@@ -91,6 +96,8 @@ export default {
               ctx.$message({
                 message: "注册成功",
               });
+              // 路由跳转
+              router.push("/");
             });
         } else {
           console.log("error submit!!");
