@@ -30,7 +30,7 @@
     </el-form-item>
     <!-- 找回密码 -->
     <div class="tiparea">
-      <p>忘记密码? <a href="">立即找回</a></p>
+      <p>忘记密码? <a @click.prevent="handleForgot">立即找回</a></p>
     </div>
   </el-form>
 </template>
@@ -75,7 +75,11 @@ export default {
         }
       });
     };
-    return { handleLogin };
+    // 找回密码
+    const handleForgot = () => {
+      router.push("/forgotpassword");
+    };
+    return { handleLogin, handleForgot };
   },
 };
 </script>

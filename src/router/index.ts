@@ -13,6 +13,16 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/loginRegister.vue')
   },
   {
+    path: '/forgotpassword',
+    name: 'Forgotpassword',
+    component: () => import('../views/forgotpassword.vue')
+  },
+  {
+    path: '/resetpassword/:id',
+    name: 'Resetpassword',
+    component: () => import('../views/resetpassword.vue')
+  },
+  {
     path: '/:catchAll(.*)',
     name: '/404',
     component: () => import('../views/404.vue')
